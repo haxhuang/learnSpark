@@ -2,7 +2,6 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.client._
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.hbase.{HBaseConfiguration, HColumnDescriptor, HTableDescriptor, TableName}
-
 import scala.collection.JavaConversions._
 import util.utility.timer
 
@@ -19,7 +18,6 @@ object testHbase {
     val conn = ConnectionFactory.createConnection(conf)
     val admin = conn.getAdmin
     val userTable = TableName.valueOf(tablename)
-
     if (admin.tableExists(userTable)) {
       println("Table exists!")
       //admin.disableTable(userTable)
@@ -61,7 +59,7 @@ object testHbase {
   def testScan(table: Table): Unit = {
     timer {
       val s = new Scan()
-      s.setStartRow(Bytes.toBytes("000"))
+      s.setStartRow(Bytes.toBytes("00010"))
       s.setStopRow(Bytes.toBytes("00010730363610.4"))
       s.addColumn(cf.getBytes, qulified.getBytes)
       val scanner = table.getScanner(s)
