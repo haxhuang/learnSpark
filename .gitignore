@@ -1,2 +1,7 @@
 *.class
 *.log
+target
+out
+.idea
+learnspark.iml
+spark-warehouse
