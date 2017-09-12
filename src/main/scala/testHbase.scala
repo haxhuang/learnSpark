@@ -1,24 +1,15 @@
-package recommend
-
-import org.apache.hadoop.hbase.{HBaseConfiguration, HColumnDescriptor, HTableDescriptor, TableName}
+import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.client._
 import org.apache.hadoop.hbase.util.Bytes
+import org.apache.hadoop.hbase.{HBaseConfiguration, HColumnDescriptor, HTableDescriptor, TableName}
 
 import scala.collection.JavaConversions._
-import org.apache.hadoop.conf.Configuration
+import util.utility.timer
 
 object testHbase {
   val tablename: String = "t2"
   val cf: String = "c1"
   val qulified: String = "c11"
-
-  def time[R](block: => R): R = {
-    val t0 = System.nanoTime()
-    val result = block // call-by-name
-    val t1 = System.nanoTime()
-    println("Elapsed time: " + (t1 - t0) / (1000 * 1000) + "ms")
-    result
-  }
 
   def main(args: Array[String]): Unit = {
     val HBASE_CONFIG = new Configuration();
@@ -51,7 +42,7 @@ object testHbase {
   }
 
   def testDelete(table: Table): Unit = {
-    time {
+    timer {
       val d = new Delete("id001".getBytes)
       d.addColumn(cf.getBytes, qulified.getBytes)
       table.delete(d)
@@ -59,7 +50,7 @@ object testHbase {
   }
 
   def testGet(table: Table): Unit = {
-    time {
+    timer {
       val g = new Get("00010730257914.5".getBytes)
       val result = table.get(g)
       val value = Bytes.toString(result.getValue(cf.getBytes, qulified.getBytes))
@@ -68,7 +59,7 @@ object testHbase {
   }
 
   def testScan(table: Table): Unit = {
-    time {
+    timer {
       val s = new Scan()
       s.setStartRow(Bytes.toBytes("000"))
       s.setStopRow(Bytes.toBytes("00010730363610.4"))

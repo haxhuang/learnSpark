@@ -1,9 +1,7 @@
-package recommend
-
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SparkSession
 
-object recommendClient {
+object testSparkSql {
   case class Person(name: String, age: Long)
 
   def main(args: Array[String]): Unit = {
