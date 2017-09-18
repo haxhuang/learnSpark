@@ -1,3 +1,5 @@
+import org.apache.spark.rdd.RDD
+
 import scala.reflect.ClassTag
 import scala.io.Source
 import scala.reflect.io.Path
@@ -29,6 +31,11 @@ object testScala {
   private val DIR = "D:\\Demo"
 
   def main(args: Array[String]): Unit = {
+//    testAggregate()
+    val p = s"partition:${100}"
+    println(p)
+    return
+
     readFile()
     setName(new Child("father"))
     //    setName(100)
@@ -49,5 +56,45 @@ object testScala {
         println(line)
       }
     }
+  }
+
+
+
+  def testAggregate(): Unit = {
+    import org.apache.spark.SparkConf
+    import org.apache.spark.SparkContext
+    val sparkConf = new SparkConf().setAppName("test")
+    sparkConf.setMaster("local[*]")
+    val sc = new SparkContext(sparkConf)
+    val list = List(1, 2, 3, 4, 6)
+    val r = list.par.aggregate(1)((x, number) => x + number, (a, b) => (a + b))
+    print("aggregate result:" + r)
+
+    val data = List((1, 3), (1, 2), (1, 4), (2, 3), (1, 5))
+    val rdd = sc.parallelize(data, 4)
+    def combOp(a: String, b: String): String = {
+      println("combOp: " + a + "\t" + b)
+      a + b
+    }
+
+    //合并在同一个partition中的值，a的数据类型为zeroValue的数据类型，b的数据类型为原value的数据类型
+    def seqOp(a: String, b: Int): String = {
+      println("SeqOp:" + a + "\t" + b)
+      a + b
+    }
+
+    val r3 = rdd.aggregateByKey("100")(seqOp, combOp)
+    println("aggregateByKey result:")
+    r3.collect().foreach(println)
+    //zeroValue:中立值,定义返回value的类型，并参与运算
+    //seqOp:用来在同一个partition中合并值
+    //combOp:用来在不同partiton中合并值
+    val res: RDD[(Int, Int)] = rdd.aggregateByKey(100)(
+      // seqOp
+      math.min(_, _),
+      // combOp
+      _ + _)
+    res.collect.foreach(println)
+    sc.stop()
   }
 }
