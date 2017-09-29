@@ -1,9 +1,12 @@
+package kafka
+
 import java.util.Properties
 //import kafka.producer.{KeyedMessage, Producer, ProducerConfig}
-import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord, RecordMetadata}
+import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord}
+import org.apache.kafka.common.serialization.StringSerializer
+
 import scala.io.Source
 import scala.reflect.io.Path
-import org.apache.kafka.common.serialization.StringSerializer
 
 object KafkaProducer {
   def main(args: Array[String]): Unit = {

@@ -1,6 +1,7 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.{HashPartitioner, SparkConf, SparkContext}
 
+
 object testSpark {
   def main(args: Array[String]): Unit = {
 
@@ -11,6 +12,7 @@ object testSpark {
       .config("spark.some.config.option", "some-value")
       .getOrCreate()
     val sc = spark.sparkContext
+
     val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 3, 5, 7, 9, 10, 34, 56, 78, 19, 20, 1, 3, 1, 5, 1, 7, 1, 8, 1, 9)
     val rdd = sc.parallelize(list)
     val sampleRdd = rdd.sample(false, 0.1)

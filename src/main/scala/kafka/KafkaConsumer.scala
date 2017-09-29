@@ -1,14 +1,18 @@
+package kafka
+
 import java.util
 import java.util.Properties
-import scala.collection.JavaConverters._
+
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.zookeeper.ZooKeeper
+
 import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 object KafkaConsumer {
   def main(args: Array[String]): Unit = {
-    getKafkaPartitions()
-//    consumeKafkaMsg()
+//    getKafkaPartitions()
+    consumeKafkaMsg()
 //        consumeKafkaMsg_V1()
 //        getKafkaBrokers()
   }
@@ -32,8 +36,7 @@ object KafkaConsumer {
   }
 
   def consumeKafkaMsg_V1(): Unit = {
-    import kafka.consumer.ConsumerConfig
-    import kafka.consumer.Consumer
+    import kafka.consumer.{Consumer, ConsumerConfig}
 
     val topic = "test-kafka"
     val consumerid = "consumer"

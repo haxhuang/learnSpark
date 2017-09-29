@@ -1,4 +1,6 @@
-import org.apache.spark.sql.SparkSession
+import java.util.Properties
+
+import org.apache.spark.sql.{SQLContext, SparkSession}
 
 object testSparkSql {
 
@@ -12,6 +14,13 @@ object testSparkSql {
       .config("spark.some.config.option", "some-value")
       .getOrCreate()
     val df1 = spark.read.option("header", "true").csv("d:\\demo\\aa.csv")
+
+    readMySqlData(spark.sqlContext)
+
+    writeMySqlData(spark.sqlContext)
+
+    //    readHiveData(spark.sqlContext)
+
     df1.createOrReplaceTempView("people")
 
     //    df1.printSchema()
@@ -19,9 +28,6 @@ object testSparkSql {
     //    df1.show()
     //    spark.table("people").write.saveAsTable("testhive")
     //    spark.sql("select name,age from testhive").show()
-
-    return
-
 
     import spark.implicits._
     val path = "d:\\demo\\people.json"
@@ -42,6 +48,27 @@ object testSparkSql {
     sqldf.show()
   }
 
+  def readHiveData(context: SQLContext): Unit = {
+    context.sql("select * from kjt_pv limit 10").show()
+  }
+
+  def readMySqlData(sqlContext: SQLContext): Unit = {
+    sqlContext.read.format("jdbc").options(Map("url" -> "jdbc:mysql://10.10.2.19:3306/piwik",
+      //注意：集群上运行时，一定要添加这句话，否则会报找不到mysql驱动的错
+      "driver" -> "com.mysql.jdbc.Driver",
+      "dbtable" -> "(select * from piwik_site) as site",
+      "user" -> "bigdatateam", "password" -> "kjt.com")).load().show()
+  }
+
+  def writeMySqlData(sQLContext: SQLContext): Unit = {
+    //将结果写入数据库中
+    val path = "d:\\demo\\people.json"
+    val df = sQLContext.read.json(path)
+    val properties = new Properties()
+    properties.setProperty("user", "root")
+    properties.setProperty("password", "Kjt.com")
+    df.write.mode("append").jdbc("jdbc:mysql://192.168.60.45:3306/kjt?useUnicode=true&characterEncoding=UTF-8", "product", properties)
+  }
 
   import org.apache.spark.sql.expressions._
   import org.apache.spark.sql.types._
@@ -79,5 +106,4 @@ object testSparkSql {
     //返回UDAF最后的计算结果
     override def evaluate(buffer: Row): Any = buffer.getAs[Int](0)
   }
-
 }
