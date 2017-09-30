@@ -28,12 +28,10 @@ object testSparkStreaming {
     val pair = words.map(x => (x, 1))
     //每隔2s钟统计前20s内的单词数
     new org.apache.spark.streaming.Duration(10)
-    val wordCounts = pair.reduceByKeyAndWindow(_ + _, _ - _, Seconds(20), Seconds(2), 2)
-    //    val wordCounts = pair.reduceByKeyAndWindow(_ + _, Seconds(20), Seconds(2))
-    //    val windowedWordCounts = pair.reduceByKeyAndWindow(_ + _, org.apache.spark.streaming.Duration(20), org.apache.spark.streaming.Duration(10))
-
+    //    val wordCounts = pair.reduceByKeyAndWindow(_ + _, _ - _, Seconds(20), Seconds(2), 2)
+    val wordCounts = pair.reduceByKeyAndWindow((a: Int, b: Int) => (a + b), Seconds(20), Seconds(2))
     wordCounts.print
-    ssc.checkpoint("d:\\demo\\checkpoint")
+//    ssc.checkpoint("d:\\demo\\checkpoint")
     ssc.start
     ssc.awaitTermination
   }
