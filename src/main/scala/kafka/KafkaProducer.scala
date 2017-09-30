@@ -4,12 +4,14 @@ import java.util.Properties
 //import kafka.producer.{KeyedMessage, Producer, ProducerConfig}
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord}
 import org.apache.kafka.common.serialization.StringSerializer
-
+import org.apache.log4j.{Level, Logger}
 import scala.io.Source
 import scala.reflect.io.Path
 
 object KafkaProducer {
   def main(args: Array[String]): Unit = {
+    Logger.getLogger("org").setLevel(Level.ERROR)
+
     for (a <- Range(1, 2)) {
       new Thread(new KafkaProduceMsg("kjtlxsvr6:9092,kjtlxsvr7:9092", "test-kafka")).start()
     }

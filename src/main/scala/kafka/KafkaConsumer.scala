@@ -11,8 +11,8 @@ import scala.collection.JavaConverters._
 
 object KafkaConsumer {
   def main(args: Array[String]): Unit = {
-//    getKafkaPartitions()
-    consumeKafkaMsg()
+    getKafkaPartitions()
+//    consumeKafkaMsg()
 //        consumeKafkaMsg_V1()
 //        getKafkaBrokers()
   }
