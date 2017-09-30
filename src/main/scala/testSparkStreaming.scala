@@ -9,7 +9,7 @@ object testSparkStreaming {
     val spark = SparkSession
       .builder()
       .master("local[*]")
-      .appName("Spark SQL basic example")
+      .appName("Spark SQL basic example1")
       .config("spark.some.config.option", "some-value")
       .getOrCreate()
     val sc = spark.sparkContext
