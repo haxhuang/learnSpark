@@ -18,7 +18,7 @@ object testSparkStreaming {
     val ssc = new StreamingContext(sc, Seconds(2))
     val zkQuorum = "kjtlxsvr4:2181,kjtlxsvr5:2181,kjtlxsvr6:2181"
     val group = "something"
-    val topics = "test-kafka"
+    val topics = "test-kafka1"
     val numThreads = 1
     val topicMap = topics.split(",").map((_, numThreads.toInt)).toMap
     val lineMap = KafkaUtils.createStream(ssc, zkQuorum, group, topicMap)
